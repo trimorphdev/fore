@@ -99,7 +99,7 @@ fn parse_child(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) -> IsCh
                     println!("PARSING CHILDREN (PUNCT TEXT)");
                     return IsChild::Some(
                         format!(
-                            "fore_frontend::TextNode::new(\"{}\".into())",
+                            "fore::frontend::TextNode::new(\"{}\".into())",
                             parse_text_node(iter)).parse().unwrap());
                 }
             },
@@ -107,7 +107,7 @@ fn parse_child(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) -> IsCh
                 println!("PARSING CHILDREN (PUNCT TEXT)");
                 return IsChild::Some(
                     format!(
-                        "fore_frontend::TextNode::new(\"{}\".into())",
+                        "fore::frontend::TextNode::new(\"{}\".into())",
                         parse_text_node(iter)).parse().unwrap());
             },
         }
@@ -309,7 +309,7 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
         }
 
         // compile children
-        element.push_str("let mut children: Vec<Box<dyn fore_frontend::DOMElement>> = vec![];");
+        element.push_str("let mut children: Vec<Box<dyn fore::frontend::DOMElement>> = vec![];");
         for child in children {
             element.push_str(
                 &format!("children.push({}.into());", child)
