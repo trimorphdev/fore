@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "fore",
+    "fore-frontend",
+    "fore-rsx",
+]

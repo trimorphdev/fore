@@ -1,0 +1,10 @@
+[package]
+name = "fore"
+version = "0.1.0-alpha"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+fore-frontend = { path = "../fore-frontend", version = "0.1.0-alpha" }
+fore-rsx = { path = "../fore-rsx", version = "0.1.0-alpha" }
