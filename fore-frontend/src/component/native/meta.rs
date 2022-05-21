@@ -6,7 +6,7 @@ use crate::{AttributeMap, Children, Component, DOMElement, HTMLElement};
 #[derive(Clone, Debug, PartialEq)]
 pub struct Meta {}
 
-impl Component for eta {
+impl Component for Meta {
     fn new() -> Self {
         Self {}
     }

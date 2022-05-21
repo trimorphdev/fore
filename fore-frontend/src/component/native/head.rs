@@ -1,5 +1,4 @@
 //! The HTML `head` element.
-n
 use crate::{AttributeMap, Children, Component, DOMElement, HTMLElement};
 
 /// The HTML `head` element as a component.
