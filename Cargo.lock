@@ -11,6 +11,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "fore-bench"
+version = "0.1.0-alpha"
+dependencies = [
+ "fore",
+]
+
+[[package]]
 name = "fore-frontend"
 version = "0.1.0-alpha"
 

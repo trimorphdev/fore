@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "fore",
+    "fore-bench",
     "fore-frontend",
     "fore-rsx",
 ]
