@@ -4,7 +4,7 @@
 
 extern crate proc_macro;
 
-use proc_macro2::{LineColumn, Span, TokenStream, TokenTree};
+use proc_macro2::{LineColumn, TokenStream, TokenTree};
 use quote::{quote, quote_spanned};
 use std::collections::HashMap;
 use std::iter::Peekable;
@@ -40,8 +40,6 @@ fn parse_text_node(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) -> 
 
     while let Some(next_token) = iter.peek() {
         let as_string = next_token.to_string();
-        println!("TEXT NODE ITERATION: '{}'", as_string);
-        println!("ITERATION SPAN: '{:?}'", next_token.span());
         if as_string == "<" || as_string == "{" {
             break;
         }
@@ -62,7 +60,6 @@ fn parse_text_node(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) -> 
         iter.next();
     }
 
-    println!("VALUE FOUND.");
     return value;
 }
 
@@ -71,7 +68,6 @@ fn parse_child(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) -> IsCh
     if let Some(next_token) = iter.peek() {
         match next_token {
             TokenTree::Group(group) => {
-                println!("PARSING CHILD (group)");
                 let value = IsChild::Some(group.to_string().parse().unwrap());
                 iter.next();
                 value
@@ -81,22 +77,17 @@ fn parse_child(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) -> IsCh
                 if as_string == "<" {
                     iter.next();
                     if let Some(name) = iter.peek() {
-                        println!("CHILD NAME: {}", name);
                         if name.to_string() == "/" {
                             // it's a closing tag
                             iter.next();
-                            println!("PARSING CHILDREN (END)");
                             return IsChild::End;
                         }
                     } else {
-                        println!("PARSING CHILDREN (ERROR)");
                         return IsChild::Error(quote! { compile_error!("expected a tag name") });
                     }
         
-                    println!("PARSING CHILDREN (CHILD)");
                     return IsChild::Some(parse_html_element(iter));
                 } else {
-                    println!("PARSING CHILDREN (PUNCT TEXT)");
                     return IsChild::Some(
                         format!(
                             "fore::frontend::TextNode::new(\"{}\".into())",
@@ -104,7 +95,6 @@ fn parse_child(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) -> IsCh
                 }
             },
             _ => {
-                println!("PARSING CHILDREN (PUNCT TEXT)");
                 return IsChild::Some(
                     format!(
                         "fore::frontend::TextNode::new(\"{}\".into())",
@@ -128,13 +118,10 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
             // is group
             is_group = true;
             name = ">".into();
-            println!("IS GROUP");
         } else {
             match open {
-                TokenTree::Ident(ident) => {
+                TokenTree::Ident(_) => {
                     name = raw_name;
-    
-                    println!("COMPONENT NAME");
                 },
                 token => {
                     return quote_spanned! {
@@ -148,14 +135,11 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
         return quote! { compile_error!("expected a component name or '>'") };
     }
 
-    println!("Component name: {}" , name);
-
     let mut attributes = HashMap::new();
     if !is_group {
         // Look for attributes
         while let Some(attr) = iter.next() {
             if attr.to_string() == ">" {
-                println!("ATTRIBUTES OVER");
                 break;
             }
 
@@ -164,7 +148,6 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
             match attr {
                 TokenTree::Ident(ident) => {
                     attr_name = ident.to_string();
-                    println!("ATTRIBUTE NAME: {}", attr_name);
                 },
                 token => {
                     return quote_spanned! {
@@ -181,7 +164,6 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
                 }
 
                 iter.next(); // skip over =
-                println!("AFTER EQUALS:  {}", iter.peek().unwrap());
             } else {
                 return quote! { compile_error!("expected component to close") };
             }
@@ -199,11 +181,9 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
                             "\"{}\"",
                             attr_value
                         );
-                        println!("ATTRIBUTE VALUE: {}", attr_value);
                     },
                     TokenTree::Group(group) => {
                         attr_value = group.to_string();
-                        println!("ATTRIBUTE VALUE: {}", attr_value);
                     },
                     token => {
                         return quote_spanned! {
@@ -221,7 +201,6 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
     }
 
     let mut children = vec![];
-    println!("PARSING CHILDREN");
     loop {
         match parse_child(iter) {
             IsChild::Some(child) => {
@@ -238,7 +217,6 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
 
     let end_name;
     if let Some(open) = iter.peek() {
-        println!("PEEKING END NAME {}", open.to_string());
         if is_group {
             if open.to_string() != ">" {
                 return quote_spanned! {
@@ -259,7 +237,6 @@ fn parse_html_element(iter: &mut Peekable<proc_macro2::token_stream::IntoIter>) 
                     }
 
                     iter.next();
-                    println!("COMPONENT NAME");
                 },
                 token => {
                     return quote_spanned! {
@@ -339,8 +316,6 @@ pub fn rsx(stream: proc_macro::TokenStream) -> proc_macro::TokenStream {
                         }
                     );
                 }
-
-                println!("COMPONENT OPEN");
             },
             token => {
                 return proc_macro::TokenStream::from(
