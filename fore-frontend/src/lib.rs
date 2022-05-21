@@ -2,10 +2,12 @@
 
 pub mod component;
 pub mod element;
+pub mod global_attr;
 
 pub use component::Component;
 pub use element::{AttributeMap, Children, DOMElement, ElementGroup, HTMLElement, HTMLElementBuilder,
                   TextNode};
+pub use global_attr::global_attr;
 pub use std::fmt::{Debug, Display};
 
 

@@ -1,6 +1,7 @@
 //! The HTML `meta` element.
 
 use crate::{AttributeMap, Children, Component, DOMElement, HTMLElement};
+use crate::global_attr;
 
 /// The HTML `meta` element as a component.
 #[derive(Clone, Debug, PartialEq)]
@@ -13,7 +14,7 @@ impl Component for Meta {
 
     fn render(&self, attrs: AttributeMap, children: Children) -> HTMLElement {
         let mut element = HTMLElement::new("meta".into());
-        *element.get_attributes_mut() = attrs;
+        *element.get_attributes_mut() = global_attrs(&attrs);
         *element.get_children_mut() = children;
         element
     }
