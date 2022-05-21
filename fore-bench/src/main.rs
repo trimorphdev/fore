@@ -5,9 +5,15 @@ use fore::prelude::*;
 fn main() {
     let start = Instant::now();
     let rendered = rsx! {
-        <Div>
-            { std::env::consts::OS }
-        </Div>
+        <Html>
+            <Head>
+                <Title>Benchmark Website</Title>
+            </Head>
+
+            <Body>
+                Hello, world!
+            </Body>
+        </Html>
     }.render();
     let end = start.elapsed().as_nanos();
     println!("{}", rendered);
