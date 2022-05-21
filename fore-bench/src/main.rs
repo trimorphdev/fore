@@ -10,7 +10,7 @@ fn main() {
                 <Title>Benchmark Website</Title>
             </Head>
 
-            <Body>
+            <Body test_attr="Hello, world!">
                 Hello, world!
             </Body>
         </Html>
