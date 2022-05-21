@@ -1,5 +1,6 @@
 //! Native HTML elements as components.
 
+mod body;
 mod div;
 mod head;
 mod link;
@@ -8,6 +9,7 @@ mod p;
 mod span;
 mod title;
 
+pub use body::Body;
 pub use div::Div;
 pub use head::Head;
 pub use link::Link;
