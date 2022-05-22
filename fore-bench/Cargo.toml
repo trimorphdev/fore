@@ -1,9 +1,0 @@
-[package]
-name = "fore-bench"
-version = "0.1.0-alpha"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-fore = { path = "../fore", version = "0.1.0-alpha" }
